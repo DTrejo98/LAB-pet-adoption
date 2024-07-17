@@ -241,20 +241,58 @@ const pets = [
     }
   ];
 
-  const app = document.querySelector("#app");
-
-let domString = "";
-for (const pet of pets) {
-  // CARD FROM BOOTSTRAP: https://getbootstrap.com/docs/5.1/components/card/#example Removed the button
-  domString += `<div class="card" style="width: 18rem;">
-      <img src=${pet.imageUrl} class="card-img-top" alt=${pet.name}>
-      <div class="card-body">
-        <h5 class="card-title">${pet.name}</h5>
-        <h5 class="card-title">${pet.type}</h5>
-        <p class="card-text">${pet.color}</p>
-        <p class="card-text">${pet.specialSkill}</p>
-      </div>
-    </div>`;
+const renderToDom = (divId, htmlToRender) => {
+  const selectedDiv = document.querySelector(divId);
+  selectedDiv.innerHTML = htmlToRender;
 };
 
-app.innerHTML = domString;
+const cardsOnDom = (array) => {
+  let domString = "";
+  for (const pets of array) {
+    domString = `<div class="card" style="width: 18rem;">
+      <img src=${pets.imageUrl} class="card-img-top" alt=${pets.name}>
+      <div class="card-body">
+        <h5 class="card-title">${pets.name}</h5>
+        <h5 class="card-title">${pets.type}</h5>
+        <p class="card-text">${pets.color}</p>
+        <p class="card-text">${pets.specialSkill}</p>
+      </div>
+    </div>`;
+  };
+
+  renderToDom("#app", domString);
+};
+
+const filter = (array, typeString) => {
+  const typeArray = [];
+  for (const pets of array) {
+    if (pets.type === typeString) {
+      typeArray.push(pets);
+    }
+  }
+  return typeArray;
+};
+
+const showAllButton = document.querySelector("#show-btn");
+const dogButton = document.querySelector("#dogType");
+const catButton = document.querySelector("#catType");
+const dinoButton = document.querySelector("#dinoType");
+
+showAllButton.addEventListener("click", () => {
+  cardsOnDom(pets);
+});
+
+dogButton.addEventListener("click", () => {
+  const dogPet = filter(pets, "dog");
+  cardsOnDom(dogPet);
+});
+
+catButton.addEventListener("click", () => {
+  const catPet = filter(pets, "cat");
+  cardsOnDom(catPet);
+});
+
+dinoButton.addEventListener("click", () => {
+  const dinoPet = filter(pets, "dino");
+  cardsOnDom(dinoPet);
+});
