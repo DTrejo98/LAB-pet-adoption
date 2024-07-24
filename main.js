@@ -241,58 +241,91 @@ const pets = [
     }
   ];
 
-const renderToDom = (divId, htmlToRender) => {
-  const selectedDiv = document.querySelector(divId);
-  selectedDiv.innerHTML = htmlToRender;
-};
-
-const cardsOnDom = (array) => {
-  let domString = "";
-  for (const pets of array) {
-    domString = `<div class="card" style="width: 18rem;">
-      <img src=${pets.imageUrl} class="card-img-top" alt=${pets.name}>
+  
+  // ******************** //
+  // **** FUNCTIONS ***** //
+  // ******************** //
+  
+  // Render to DOM utility function
+  const renderToDom = (divId, htmlToRender) => {
+    const selectedDiv = document.querySelector(divId);
+    selectedDiv.innerHTML = htmlToRender;
+  };
+  
+  // get the cards on the DOM
+  const cardsOnDom = (array) => {
+    let domString = "";
+    for (const member of array) {
+      domString += `<div class="card" style="width: 18rem;">
+      <div class="card-header">
+      ${member.name}
+      </div>
+      <img src="${member.imageUrl}" class="card-img-top" alt="...">
       <div class="card-body">
-        <h5 class="card-title">${pets.name}</h5>
-        <h5 class="card-title">${pets.type}</h5>
-        <p class="card-text">${pets.color}</p>
-        <p class="card-text">${pets.specialSkill}</p>
+        <p class="card-title">${member.color}</p>
+        <p class="card-text">${member.specialSkill}</p>
+      </div>
+      <div class="card-footer text-body-secondary">
+      ${member.type}
       </div>
     </div>`;
-  };
-
-  renderToDom("#app", domString);
-};
-
-const filter = (array, typeString) => {
-  const typeArray = [];
-  for (const pets of array) {
-    if (pets.type === typeString) {
-      typeArray.push(pets);
     }
-  }
-  return typeArray;
-};
+  
+    renderToDom("#app", domString);
+  };
+  
+  // function to filter teammates with specific favorite color
+  const filter = (array, colorString) => {
+    const colorArray = [];
+  
+    array.forEach((item) => {
+      if (item.favoriteColor === colorString) {
+        colorArray.push(item);
+      }
+    });
+  
+    for (const member of array) {
+      if (member.type === colorString) {
+        colorArray.push(member);
+      }
+    }
+  
+    return colorArray;
+  };
+  
+  // 1. Get all the cards to render on the DOM
+  // cardsOnDom(team);
+  
+  // 2. Get only the teammates whose favorite color is blue on the DOM
+  
+  // ******************** //
+  // ****** EVENTS ****** //
+  // ******************** //
+  
+  // 1. Target both of the buttons on the DOM
+  const showAllButton = document.querySelector("#show-btn");
+  const showDogButton = document.querySelector("#dog-btn");
+  const showCatButton = document.querySelector("#cat-btn");
+  const showDinoButton = document.querySelector("#dino-btn");
+  
+  // 2. Add click event to show all the instuctors on button click using the function we created above
+  showAllButton.addEventListener("click", () => {
+    cardsOnDom(pets);
+  });
+  
+  // 3. Add click event to filter all the instructors whose favorite color is blue on button click
+  showDogButton.addEventListener("click", () => {
+    const dogPetMembers = filter(pets, "dog");
+    cardsOnDom(dogPetMembers);
+  });
 
-const showAllButton = document.querySelector("#show-btn");
-const dogButton = document.querySelector("#dogType");
-const catButton = document.querySelector("#catType");
-const dinoButton = document.querySelector("#dinoType");
+  showCatButton.addEventListener("click", () => {
+    const catPetMembers = filter(pets, "cat");
+    cardsOnDom(catPetMembers);
+  });
 
-showAllButton.addEventListener("click", () => {
-  cardsOnDom(pets);
-});
-
-dogButton.addEventListener("click", () => {
-  const dogPet = filter(pets, "dog");
-  cardsOnDom(dogPet);
-});
-
-catButton.addEventListener("click", () => {
-  const catPet = filter(pets, "cat");
-  cardsOnDom(catPet);
-});
-
-dinoButton.addEventListener("click", () => {
-  const dinoPet = filter(pets, "dino");
-  cardsOnDom(dinoPet);
-});
+  showDinoButton.addEventListener("click", () => {
+    const dinoPetMembers = filter(pets, "dino");
+    cardsOnDom(dinoPetMembers);
+  });
+  
