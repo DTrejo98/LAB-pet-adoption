@@ -264,6 +264,7 @@ const pets = [
       <div class="card-body">
         <p class="card-title">${member.color}</p>
         <p class="card-text">${member.specialSkill}</p>
+        <button class="btn btn-danger" id="delete--${member.id}">Delete</button>
       </div>
       <div class="card-footer text-body-secondary">
       ${member.type}
@@ -329,3 +330,56 @@ const pets = [
     cardsOnDom(dinoPetMembers);
   });
   
+  let form = document.querySelector("form");
+
+// 2. create a function that grabs all the values from the form, pushes the new object to the array, then repaints the DOM with the new teammate
+
+const createMember = (e) => {
+  e.preventDefault();
+  const newMemberObj = {
+    id: pets.length + 1,
+    name: document.querySelector("#name").value,
+    color: document.querySelector("#color").value,
+    specialSkill: document.querySelector("#specialSkill").value,
+    type: document.querySelector("#type").value,
+    image: document.querySelector("#image").value,
+  };
+  pets.push(newMemberObj);
+  cardsOnDom(pets);
+  form.reset();
+};
+
+// 3. Add an event listener for the form submit and pass it the function (callback)
+
+form.addEventListener("submit", createMember);
+
+// ******************** //
+// ****** DELETE ****** //
+// ******************** //
+
+// Here we will be using event bubbling
+// 1. Target the app div
+
+const app = document.querySelector("#app");
+
+// 2. Add an event listener to capture clicks
+
+app.addEventListener("click", (e) => {
+  if (e.target.id.includes("delete")) {
+    const [, id] = e.target.id.split("--");
+    const index = pets.findIndex((e) => e.id === Number(id));
+    pets.splice(index, 1);
+    cardsOnDom(pets);
+  }
+});
+
+// 3. check e.target.id includes "delete"
+// 4. add logic to remove from array
+// 5. Repaint the DOM with the updated array
+
+const startApp = () => {
+  cardsOnDom(pets);
+  // events(); // ALWAYS LAST
+};
+
+startApp();
